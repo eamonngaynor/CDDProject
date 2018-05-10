@@ -35,10 +35,10 @@ using namespace std;
 char const water = '~'; //water symbol
 char const fish = 'O'; //fish symbol
 char const shark = 'X'; //shark symbol
-int numFish = 30;
-int numSharks = 16;
-int const width = 60;
-int const height = 60;
+int numFish = 16;
+int numSharks = 8;
+int const width = 30;
+int const height = 30;
 
 long int microseconds = 100000; // Timer variable
 
@@ -325,12 +325,14 @@ int i = 0;
 
 int main(void) {  
 
-  int omp_get_thread_num();
+  
 	
   #pragma omp parallel
   {
+	
+	
 	timestamp_t t0 = get_timestamp(); //getting initial timestamp
-		
+	
 	srand(time(0));
 	vector<Fish> fishArray;
 	fishArray.resize(numFish);
@@ -343,7 +345,7 @@ int main(void) {
 
     #pragma omp for
     for( int i = 0; i < width; i++) {
-    	sea[i].resize(height);
+    	sea[i].resize(height);	
     }
     
 	populateFish(sea, fishArray, numFish);
@@ -359,6 +361,7 @@ int main(void) {
 	
 	#pragma omp for
     	for (int i=0; i < numFish; i++) {
+	
     		int previousX = fishArray[i].getX();
     		int previousY = fishArray[i].getY();
     		makeDecision() < 0 ? fishArray[i].moveX(makeDecision()): fishArray[i].moveY(makeDecision());
@@ -399,6 +402,9 @@ int main(void) {
     		int previousX = sharkArray[i].getX();
     		int previousY = sharkArray[i].getY();
 			// if fish is near, move shark there and eat fish
+		int thread = omp_get_thread_num();
+		std::cout<< "Thread: " <<thread;
+		
     		if (sharkArray[i].checkNeighbourhood(sea)) {
     			sea[sharkArray[i].getX()][sharkArray[i].getY()] = Grid(shark);
     			removeFishObj(fishArray, sharkArray[i].getX(), sharkArray[i].getY());
@@ -414,7 +420,8 @@ int main(void) {
     			} else {
     				sea[previousX][previousY] = Grid();
     			}
-    		} else {
+    		} 
+		else {
     			makeDecision() < 0 ? sharkArray[i].moveX(makeDecision()): sharkArray[i].moveY(makeDecision());
 				// move shark to free position
 	    		if (sea[sharkArray[i].getX()][sharkArray[i].getY()].symbol == water) {
@@ -439,6 +446,7 @@ int main(void) {
 		        	}
 		        }
     		}
+	    
     	}
     	numSharks = numSharks + newShark;
     	blocked = 0;
@@ -455,6 +463,7 @@ int main(void) {
     double secs = (t1 - t0) / 1000000.0L;
     double fps = move/secs;	
     std::cout << "FPS: " << fps;
+    
     }
 }
 
