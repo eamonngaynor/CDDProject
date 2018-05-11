@@ -17,6 +17,9 @@ CPPFILES=main.cpp
 ALL: $(HFILES) $(CPPFILES)
 	$(CC) -o main $(CPPFLAGS) $(CPPFILES) $(DEBUGFLAGS)
 
+docs: 
+	doxygen doxyfile
+
 DEBUG: DEBUGFLAGS = -g -O0
 DEBUG: ALL
 
