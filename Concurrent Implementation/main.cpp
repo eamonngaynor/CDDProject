@@ -1,5 +1,3 @@
-
-
 /*! 
 
 
@@ -38,7 +36,7 @@ char const fish = 'O'; //fish symbol
 char const shark = 'X'; //shark symbol
 int numFish = 16;
 int numSharks = 8;
-int const width = 30;
+int const width = 50;
 int const height = 30;
 
 long int microseconds = 100000; // Timer variable
@@ -261,8 +259,6 @@ class Shark: public Animal {
 void draw(vector<vector<Grid>> &sea) {
 	
 	for(int i = 0; i < height; i++) {
-	//int thread = omp_get_thread_num();
-	//std::cout<< "Thread: " <<thread;
     	for(int j= 0; j < width; j++) {
         	cout << sea[j][i].symbol;
         }
@@ -338,7 +334,14 @@ int main(void) {
     //Segmentation dump on execution as threads not being shared	
   }
 	timestamp_t t0 = get_timestamp(); //getting initial timestamp
-	
+	time_t curtime;
+	time(&curtime);
+
+	std::fstream fs;
+	fs.open ("Benchmarking.txt", std::fstream::in | std::fstream::out | std::fstream::app);
+	fs << "\nBenchmark " << ctime(&curtime);
+  	fs.close();
+
 	srand(time(0));
 	vector<Fish> fishArray;
 	fishArray.resize(numFish);
@@ -408,8 +411,6 @@ int main(void) {
     		int previousX = sharkArray[i].getX();
     		int previousY = sharkArray[i].getY();
 		// if fish is near, move shark there and eat fish
-		//int thread = omp_get_thread_num();
-		//std::cout<< "\nThread: " <<thread;
 		
     		if (sharkArray[i].checkNeighbourhood(sea)) {
     			sea[sharkArray[i].getX()][sharkArray[i].getY()] = Grid(shark);
@@ -462,12 +463,12 @@ int main(void) {
 	timestamp_t t1 = get_timestamp();
         double secs = (t1 - t0) / 1000000.0L;
         double fps = move/secs;	
-       std::cout << "\nFPS: " << fps;
+       	std::cout << "\nFPS: " << fps;
 
-      std::fstream fs;
-      fs.open ("Benchmarking.txt", std::fstream::in | std::fstream::out | std::fstream::app);
-      fs << "  ------ BENCHMARKING -----.\n Frames per second: " << fps;
-      fs.close();
+	   	std::fstream fs;
+	   	fs.open ("Benchmarking.txt", std::fstream::in | std::fstream::out | std::fstream::app);
+	   	fs << "\n Move: " << move << ", " << "Frames per second: " << fps;
+	   	fs.close();
 		cout << "\nMove: " << move << endl;
 		usleep(microseconds);
     	draw(sea);
@@ -479,10 +480,8 @@ int main(void) {
     double secs = (t1 - t0) / 1000000.0L;
     double fps = move/secs;	
     std::cout << "\nFPS: " << fps;
-    
-    std::fstream fs;
     fs.open ("Benchmarking.txt", std::fstream::in | std::fstream::out | std::fstream::app);
-    fs << "  ------ BENCHMARKING -----.\n Time taken to complete: " << secs;
+    fs << "\n\n Time taken to complete: " << secs <<"\n";
     fs.close();
     
 }
