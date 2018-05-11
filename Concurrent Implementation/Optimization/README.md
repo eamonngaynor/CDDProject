@@ -1,30 +1,31 @@
-Synopsis:
+# Wa-Tor 4th Year Concurrency Project
 
-4th Year Concurrent Project
+This project is an implementation of the Wa-Tor simulation which is a population dynamics simulation using sharkes and fish. More can be read about Wa-Tor here: https://en.wikipedia.org/wiki/Wa-Tor
 
+## Authors
 
+[Eamonn Gaynor](https://github.com/eamonngaynor) & [Peter Cronin](https://github.com/peadarcronin)
 
+## Getting Started
 
-Author:
+### Prerequisites
 
-Eamonn Gaynor & Peter Cronin 
+C++ Compiler(See [here](https://www.tutorialspoint.com/cplusplus/cpp_environment_setup.htm) for instructions for your machine.)
 
+### Running The Program
 
+Clone the repository to a folder of your choosing using ```git clone https://github.com/eamonngaynor/CDDProject.git``` in your terminal. Navigate to the Concurrent Implementation folder and then enter ```make``` to run the Makefile and compile the program. Finally, enter ```./main``` and the simulation will run.
 
-Solution:
+## Things to Note
 
-This program will demonstrate the Wator Simulator with optimization using OpenMP
+When the simulation is run, the number of moves and the average frames per second are displayed. The sharks are denoted as Xs and the fish are Os. The frames per second per move and total time taken is written to a text file stored in the folder. This is done for benchmarking purposes. In this phase of the project, there is some multithreading which hasn't impacted the speed and there were segmentation errors encountered when trying to add more multithreading.
 
+## Screenshots
 
+![alt tag](https://i.imgur.com/pv1nqzi.png "Wa-Tor")
+![alt tag](https://i.imgur.com/RKOkc88.png "Wa-Tor Benchmarking")
 
-
-Installation:
-
-Please run this program by using the Makefile provided. The Makefile includes the G++ compiler.
-
-
-
-License:
+## License:
 
 MIT License
 Copyright (c) 2017 Eamonn Gaynor Peter Cronin
