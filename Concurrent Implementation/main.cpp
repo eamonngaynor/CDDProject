@@ -275,8 +275,9 @@ void draw(vector<vector<Grid>> &sea) {
 //populate grid with fish
 void populateFish(vector<vector<Grid>> &sea, vector<Fish> &fishArray, int numFish) {
     //Checking for available space
-    
+    #pragma omp parallel for
     for (int i=0; i < numFish; i++) {
+	
     	fishArray[i] = Fish();
     	do {
         	fishArray[i].setX(rand() % width);
@@ -289,8 +290,10 @@ void populateFish(vector<vector<Grid>> &sea, vector<Fish> &fishArray, int numFis
 
 //populate grid with sharks
 void populateSharks(vector<vector<Grid>> &sea, vector<Shark> &sharkArray, int numSharks) {
-   
+    #pragma omp parallel for
     for (int i=0; i < numSharks; i++) {
+	//int thread = omp_get_thread_num();
+	//std::cout<< "\nThread: " <<thread;
     	sharkArray[i] = Shark();
     	do {
     	   	sharkArray[i].setX(rand() % width);
@@ -302,7 +305,7 @@ void populateSharks(vector<vector<Grid>> &sea, vector<Shark> &sharkArray, int nu
 }
 
 void removeFishObj (vector<Fish> &fishArray, int x, int y) {
-	
+	#pragma omp parallel for
 	for (int i=0; i < numFish; i++) {
     	if (fishArray[i].getX() == x && fishArray[i].getY() == y) {
     		fishArray.erase(fishArray.begin() + i);
@@ -459,7 +462,18 @@ int main(void) {
     	blocked = 0;
 
     	move++;
-		cout << "Move: " << move << endl;
+    	timestamp_t t1 = get_timestamp();
+    	double secs = (t1 - t0) / 1000000.0L;
+    	double fps = move/secs;	
+    	std::cout << "\nFPS: " << fps;
+
+    	std::fstream fs;
+    	fs.open ("Benchmarking.txt", std::fstream::in | std::fstream::out | std::fstream::app);
+    	fs << "  ------ BENCHMARKING -----.\n Frames per second: " << fps;
+    	fs.close();
+
+
+		cout << "\nMove: " << move << endl;
 		usleep(microseconds);
     	draw(sea);
 		cout << "Fish[" << numFish << "] Sharks[" << numSharks << "]" << endl;
@@ -469,11 +483,11 @@ int main(void) {
     timestamp_t t1 = get_timestamp();
     double secs = (t1 - t0) / 1000000.0L;
     double fps = move/secs;	
-    std::cout << "FPS: " << fps;
+    std::cout << "\nFPS: " << fps;
 
     std::fstream fs;
     fs.open ("Benchmarking.txt", std::fstream::in | std::fstream::out | std::fstream::app);
-    fs << "  ------ BENCHMARKING -----.\n Frames per second: " << fps;
+    fs << "  ------ BENCHMARKING -----.\n Time taken to complete " << secs;
     fs.close();
 
     
