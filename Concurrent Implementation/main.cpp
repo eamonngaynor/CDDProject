@@ -270,14 +270,13 @@ void draw(vector<vector<Grid>> &sea) {
     }
     cout << endl;
 
-}
-
+}	
+  
 //populate grid with fish
 void populateFish(vector<vector<Grid>> &sea, vector<Fish> &fishArray, int numFish) {
     //Checking for available space
-    #pragma omp parallel for
+    
     for (int i=0; i < numFish; i++) {
-	
     	fishArray[i] = Fish();
     	do {
         	fishArray[i].setX(rand() % width);
@@ -290,10 +289,8 @@ void populateFish(vector<vector<Grid>> &sea, vector<Fish> &fishArray, int numFis
 
 //populate grid with sharks
 void populateSharks(vector<vector<Grid>> &sea, vector<Shark> &sharkArray, int numSharks) {
-    #pragma omp parallel for
+   
     for (int i=0; i < numSharks; i++) {
-	//int thread = omp_get_thread_num();
-	//std::cout<< "\nThread: " <<thread;
     	sharkArray[i] = Shark();
     	do {
     	   	sharkArray[i].setX(rand() % width);
@@ -305,7 +302,7 @@ void populateSharks(vector<vector<Grid>> &sea, vector<Shark> &sharkArray, int nu
 }
 
 void removeFishObj (vector<Fish> &fishArray, int x, int y) {
-	#pragma omp parallel for
+	
 	for (int i=0; i < numFish; i++) {
     	if (fishArray[i].getX() == x && fishArray[i].getY() == y) {
     		fishArray.erase(fishArray.begin() + i);
@@ -331,11 +328,10 @@ typedef unsigned long long timestamp_t;
 
 
 
+
 int i = 0;
 
-int main(void) {  
-
-  
+int main(void) {   
 	
   #pragma omp parallel
   { //Threads created, concurrency added
@@ -413,7 +409,7 @@ int main(void) {
     		int previousY = sharkArray[i].getY();
 		// if fish is near, move shark there and eat fish
 		//int thread = omp_get_thread_num();
-		//std::cout<< "Thread: " <<thread;
+		//std::cout<< "\nThread: " <<thread;
 		
     		if (sharkArray[i].checkNeighbourhood(sea)) {
     			sea[sharkArray[i].getX()][sharkArray[i].getY()] = Grid(shark);
@@ -462,17 +458,16 @@ int main(void) {
     	blocked = 0;
 
     	move++;
-    	timestamp_t t1 = get_timestamp();
-    	double secs = (t1 - t0) / 1000000.0L;
-    	double fps = move/secs;	
-    	std::cout << "\nFPS: " << fps;
+	
+	timestamp_t t1 = get_timestamp();
+        double secs = (t1 - t0) / 1000000.0L;
+        double fps = move/secs;	
+       std::cout << "\nFPS: " << fps;
 
-    	std::fstream fs;
-    	fs.open ("Benchmarking.txt", std::fstream::in | std::fstream::out | std::fstream::app);
-    	fs << "  ------ BENCHMARKING -----.\n Frames per second: " << fps;
-    	fs.close();
-
-
+      std::fstream fs;
+      fs.open ("Benchmarking.txt", std::fstream::in | std::fstream::out | std::fstream::app);
+      fs << "  ------ BENCHMARKING -----.\n Frames per second: " << fps;
+      fs.close();
 		cout << "\nMove: " << move << endl;
 		usleep(microseconds);
     	draw(sea);
@@ -484,12 +479,11 @@ int main(void) {
     double secs = (t1 - t0) / 1000000.0L;
     double fps = move/secs;	
     std::cout << "\nFPS: " << fps;
-
+    
     std::fstream fs;
     fs.open ("Benchmarking.txt", std::fstream::in | std::fstream::out | std::fstream::app);
-    fs << "  ------ BENCHMARKING -----.\n Time taken to complete " << secs;
+    fs << "  ------ BENCHMARKING -----.\n Time taken to complete: " << secs;
     fs.close();
-
     
 }
 
